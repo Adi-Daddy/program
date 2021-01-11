@@ -1,0 +1,121 @@
+#include <iostream>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+//lista przedmiotów, każdy ma dwa parametry {waga, wartość}
+vector <pair<double,double>> items = {{1.5,1}, {2.1,3.4}, {3.7,5.2}, {2.7,3.1}, {5.8,2.4}, {3,3}, {7,1}, {9,9}, {1,1}, {3,6}};
+	
+bool sort_highest_value(pair<double, double> & x1, pair<double, double> & x2){
+return (x1.second > x2.second);
+}
+
+bool sort_lowest_weight(pair<double, double> & x1, pair<double, double> & x2){
+return (x1.first < x2.first);
+}
+
+bool sort_best_profit(pair<double, double> & x1, pair<double, double> & x2){
+return (x1.second/x1.first > x2.second/x2.first);
+}
+
+void function(){
+	double Knapsack = 15;
+    double CapRemain = 0;
+    double Worth = 0;
+	
+	    for (auto x: items){
+        unsigned ItemNr = 0;
+        while(Knapsack >= x.first){
+            CapRemain+= x.first;
+            Knapsack -= x.first;
+            Worth += x.second;
+            ItemNr++;
+            break;
+        }
+        if(ItemNr) cout << "Wlozono " << x.first << "/" << x.second << "\n";
+    }
+    cout << "Waga plecaka: " << CapRemain << endl;
+    cout << "Zostalo do zapelnienia: " << Knapsack << endl;
+    cout << "Wartosc przedmiotow w plecaku: " << Worth << endl;
+}
+
+double max(int a, int b) { return (a > b) ? a : b; } 
+
+/*
+double KnapsackRec(int n, int c, double weight[], double value[], double *values) {
+    double result;
+    // Jezeli mamy obliczony wynik dla danej kombinacji, po prostu go zwracamy
+    if(*((values+n*n) + c) != -1){
+        result = *((values+n*n) + c);
+    }
+    // Jezeli skonczyly nam sie elementy lub pojemnosc, zwracamy zero
+    if(n == 0 || c == 0) {
+        result = 0;
+    // waga przedmiotu jest wieksza od dostepnego miejsca, wiec przechodzimy do kolejnego elementu
+    }else if(weight[n - 1] > c) {
+        result = KnapsackRec(n - 1, c, weight, value, values);
+    }else {
+        // porownujemy wybranie elementu i jego niewybranie, wybieramy co nam daje lepszy rezultat
+        double tmp1 = KnapsackRec(n - 1, c, weight, value, values);
+        double tmp2 = value[n - 1] + KnapsackRec(n - 1, c - weight[n - 1], weight, value, values);
+        result = max(tmp1, tmp2);
+    }
+    // zapisujemy wynik operacji w odpowiedniej komorce w tablicy dwuwymiarowej
+    *((values+n*n) + c) = result;
+    return result;
+}
+*/
+
+
+int main() {
+
+	//wypisanie wszystkich przedmiotow
+    for(auto x: items){
+        cout << "Waga: " << x.first << "  Wartosc: " << x.second << "  Oplacalnosc: " << x.second/x.first << endl;
+    }
+
+	cout << endl << string(60,'#') << endl;
+
+
+    //sortowanie według najbardziej wartosciowych przedmiotow
+    sort(items.begin(), items.end(), sort_highest_value);
+
+	cout << "Sortowanie wedlug najbardziej wartosciowych przedmiotow:" << endl << endl;
+	function();
+	
+	cout << endl << string(60,'#') << endl;
+
+    //sortowanie według najmniejszej wagi
+    sort(items.begin(), items.end(), sort_lowest_weight);
+
+	cout << "Sortowanie według najmniejszej wagi:" << endl << endl;
+	function();
+	
+	cout << endl << string(60,'#') << endl;
+
+    //sortowanie według opłacalności na podstawie stosunku wartości do wagi
+    sort(items.begin(), items.end(), sort_best_profit);
+
+	cout << "Sortowanie wedlug oplacalnosci na podstawie stosunku wartosci do wagi:" << endl << endl;
+	function();
+	
+	cout << endl << string(60,'#') << endl;
+	
+/* // dynamiczny przerobiony na double
+    int n = 10;
+    int c = 15;
+    double weight[] = {1.5, 2.1, 3.7, 2.7, 5.8, 3, 7, 9, 1, 3};
+    double value[] = {1, 3.4, 5.2, 3.1, 2.4, 3, 1, 9, 1, 6};
+    
+    double values[n][c];
+    for(int i = 0; i < n;i++) {
+        for(int j = 0; j < c;j++) {
+            values[i][j] = -1;
+        }
+    }
+    cout << KnapsackRec(5, 10, weight, value, (double *)values) << endl;
+	*/
+	
+    return 0;
+}
